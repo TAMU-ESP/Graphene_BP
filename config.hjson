@@ -1,0 +1,72 @@
+{
+// List of subjects to be analyzed
+subject_id_arr: [1,2,3,4,5,6] 
+
+// Choose which training to be used
+training_select:3
+
+// Choose which feature set to use
+feature_select: 0 
+
+//Use average features instead of beat-to-beat
+features_mean: true
+
+//Remove sample (heart beat) if rate of missing features is larger than row_remove_nan_perc*100%
+row_remove_nan_perc: 0.1
+
+root_path: './Data/'
+feature_data: '2020-11-05'
+feat_options: 'f2_ma20_mn1'
+
+//Path to store prediction results
+prediction_path: "./predictions/"
+
+
+// Select machine learning models
+//Use gradient boosting model
+GraBoosting_EN: false
+//Use xgboost model
+XGBoosting_EN:false
+//Use linear regression model
+lm_EN: false
+//Use decision tree model
+tree_EN: false
+//Use adaboost model
+ada_EN: true
+//Use random forest model
+randforest_EN: false
+//Use support vector regression model
+svr_EN: false
+//Use neural network model
+nn_EN: false
+
+//ML parameters
+n_fold: 10
+verbose_param: 0
+XGBoosting_grid: {"n_estimators": [16,32,64,128],"max_depth": [2,4,8,16], "learning_rate": [0.01]}
+ada_grid: {"n_estimators": [],"base_estimator__max_depth": []}
+svr_grid: {"C": [8,16,32],"epsilon": [0.1]}
+GraBoosting_grid: {"n_estimators": [50],"max_depth": [4,7,10,13],"min_samples_split": [2], "learning_rate": [0.01], "loss": ['ls']}
+tree_grid: {"max_depth": [4,7,10]}
+randforest_grid: {"max_depth": [4,7,10]}
+training_epochs: 3000
+learning_rate: 0.01
+
+
+//Subjects name
+subject_name_arr : ['subject1_day1','subject2_day2','subject3_day2','subject4_day3','subject5_day3','subject6_day4','subject1_day4']
+
+// Training list
+training_name_list: ['ShuffleCV_hgcp','NoShuffleCV_hgcp','SingleTrain_hgcp','SingleTrain_WithBaseValsalva','SingleTrain_S1All_TestNextDay','ShuffleCV_valsalva','NoShuffleCV_valsalva']
+cv_list: [1,1,0,0,0,1,1] 
+shuffle_list: [1,0,0,0,0,1,0]
+
+setups_name_match_str: ['subject1_day1_.*hgcp|subject2_day2_.*hgcp|subject3_day2_.*hgcp|subject4_day3_.*hgcp|subject5_day3_.*hgcp|subject6_day4_.*hgcp','subject1_day1_.*hgcp|subject2_day2_.*hgcp|subject3_day2_.*hgcp|subject4_day3_.*hgcp|subject5_day3_.*hgcp|subject6_day4_.*hgcp','.*','subject1_day1|subject2_day2|subject3_day2|subject4_day3|subject5_day3|subject6_day4','subject1','valsalva','valsalva']
+training_match_str: [[],[],'subject1_day1_.*hgcp|subject2_day2_.*hgcp|subject3_day2_.*hgcp|subject4_day3_.*hgcp|subject5_day3_.*hgcp|subject6_day4_.*hgcp','hgcp|baseline|valsalva','subject1_day1',[],[]]
+testing_match_str: [[],[],['postExerciseHgcp','postMealHgcp','postSweatBaseline'],['postExerciseHgcp','postMealHgcp','postSweatBaseline'],['subject1_day4.*setup01_hgcp','subject1_day4.*setup02_hgcp','subject1_day4.*valsalva'],[],[]]
+
+// List of features to be used in the model
+feature_name_list: ['WithIBI','NoIBI']
+
+}
+
