@@ -198,14 +198,20 @@ if __name__ == "__main__":
                 # START TRAINING PROCESS FOR EACH SELECTED MODEL
                 ###################### GradientBoosting ######################################
                 if config['GraBoosting_EN'] == 1:
-                    y_train_err,y_test_err,model_feat_imp2,model_param2 = model_graboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs,features_names_select)
+                    if (cv == 0 and i == 1) or (cv == 1):
+                        y_train_err,y_test_err,model_feat_imp2,model_param2, trained_model = model_graboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs,features_names_select)
+                    else:
+                        y_train_err,y_test_err,model_feat_imp2,model_param2, trained_model = model_graboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs,features_names_select, trained_model)
                     model_param_test_GraBoosting = np.append(model_param_test_GraBoosting, model_param2, axis=0)
                     model_feat_imp_test_GraBoosting = np.append(model_feat_imp_test_GraBoosting, model_feat_imp2, axis=0)
                     y_train_err_GraBoosting = np.append(y_train_err_GraBoosting, y_train_err)
                     y_test_err_GraBoosting = np.append(y_test_err_GraBoosting, y_test_err)
                 ###################### XGBoosting ######################################
                 if config['XGBoosting_EN'] == 1:
-                    y_train_err,y_test_err,model_feat_imp2,model_param2 = model_xgboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs,features_names_select)
+                    if (cv == 0 and i == 1) or (cv == 1):
+                        y_train_err,y_test_err,model_feat_imp2,model_param2, trained_model = model_xgboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs,features_names_select)
+                    else:
+                        y_train_err,y_test_err,model_feat_imp2,model_param2, trained_model = model_xgboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs,features_names_select, trained_model)
                     model_param_test_XGBoosting = np.append(model_param_test_XGBoosting, model_param2, axis=0)
                     model_feat_imp_test_XGBoosting = np.append(model_feat_imp_test_XGBoosting, model_feat_imp2, axis=0)
                     y_train_err_XGBoosting = np.append(y_train_err_XGBoosting, y_train_err)
@@ -225,7 +231,10 @@ if __name__ == "__main__":
                     y_test_err_tree = np.append(y_test_err_tree, y_test_err)
                 ###################### Ada Boosting Regression #######################################
                 if config['ada_EN'] == 1:
-                    y_train_err,y_test_err,model_feat_imp2,model_param2 = model_adaboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs,features_names_select)
+                    if (cv == 0 and i == 1) or (cv == 1):
+                        y_train_err,y_test_err,model_feat_imp2,model_param2, trained_model = model_adaboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs,features_names_select)
+                    else:
+                        y_train_err,y_test_err,model_feat_imp2,model_param2, trained_model = model_adaboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs,features_names_select, trained_model)
                     model_param_test_ada = np.append(model_param_test_ada, model_param2, axis=0)
                     model_feat_imp_test_ada = np.append(model_feat_imp_test_ada, model_feat_imp2, axis=0)
                     y_train_err_ada = np.append(y_train_err_ada, y_train_err)
