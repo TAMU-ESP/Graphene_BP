@@ -109,7 +109,7 @@ def impute_nans(data):
     data_imp = imp.transform(data)
     return data_imp
 
-def model_adaboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs, features_names_select):
+def model_adaboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs, features_names_select, trained_model=None):
     if (cv == 0 and i == 1) or (cv == 1):
         ada_grid_final={}
         if config['ada_grid']['n_estimators']:
@@ -146,7 +146,9 @@ def model_adaboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs, fe
             array(features_names_select)[sorted_idx][-1], feature_importance[sorted_idx][-1],
             array(features_names_select)[sorted_idx][-2], feature_importance[sorted_idx][-2],
             array(features_names_select)[sorted_idx][-3], feature_importance[sorted_idx][-3]))
-    
+    else:
+        regr_ada_gs = trained_model
+        feature_importance = regr_ada_gs.best_estimator_.feature_importances_
     # Make predictions using the testing set
     y_train_predict = regr_ada_gs.predict(X_train)
     # Make predictions using the testing set
@@ -160,9 +162,9 @@ def model_adaboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs, fe
                              0)
     model_feat_imp2 = np.repeat(model_feat_imp.reshape(1, model_feat_imp.shape[0]),
                                 np.shape(X_test)[0], 0)
-    return y_train_err, y_test_err, model_feat_imp2, model_param2
+    return y_train_err, y_test_err, model_feat_imp2, model_param2, regr_ada_gs
 
-def model_graboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs, features_names_select):
+def model_graboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs, features_names_select, trained_model=None):
     if (cv == 0 and i == 1) or (cv == 1):
         GraBoosting_grid_final = {}
         if config['GraBoosting_grid']['n_estimators']:
@@ -202,9 +204,9 @@ def model_graboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs, fe
         test_score = np.zeros((regr_GraBoosting_gs.best_params_['n_estimators'],),
                               dtype=np.float64)
     
-        for r, y_pred in enumerate(
-                regr_GraBoosting_gs.best_estimator_.staged_predict(X_test)):
-            test_score[r] = regr_GraBoosting_gs.best_estimator_.loss_(y_test, y_pred)
+    else:
+        regr_GraBoosting_gs = trained_model
+        feature_importance = regr_GraBoosting_gs.best_estimator_.feature_importances_
     
     # Make predictions using the testing set
     y_train_predict = regr_GraBoosting_gs.predict(X_train)
@@ -221,9 +223,9 @@ def model_graboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs, fe
                              0)
     model_feat_imp2 = np.repeat(model_feat_imp.reshape(1, model_feat_imp.shape[0]),
                                 np.shape(X_test)[0], 0)
-    return y_train_err, y_test_err, model_feat_imp2, model_param2
+    return y_train_err, y_test_err, model_feat_imp2, model_param2, regr_GraBoosting_gs
 
-def model_xgboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs, features_names_select):
+def model_xgboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs, features_names_select, trained_model=None):
     if (cv == 0 and i == 1) or (cv == 1):
         XGBoosting_grid_final = {}
         if config['XGBoosting_grid']['n_estimators']:
@@ -260,7 +262,9 @@ def model_xgboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs, fea
             array(features_names_select)[sorted_idx][-2], feature_importance[sorted_idx][-2],
             array(features_names_select)[sorted_idx][-3], feature_importance[sorted_idx][-3]))
         # compute test set deviance
-    
+    else:
+        regr_XGBoosting_gs = trained_model
+        feature_importance = regr_XGBoosting_gs.best_estimator_.feature_importances_
     # Make predictions using the testing set
     y_train_predict = regr_XGBoosting_gs.predict(X_train)
     # Make predictions using the testing set
@@ -276,7 +280,7 @@ def model_xgboost(X_train, y_train, X_test, y_test, cv, i, config, D, kf_gs, fea
                              0)
     model_feat_imp2 = np.repeat(model_feat_imp.reshape(1, model_feat_imp.shape[0]),
                                 np.shape(X_test)[0], 0)
-    return y_train_err, y_test_err, model_feat_imp2, model_param2
+    return y_train_err, y_test_err, model_feat_imp2, model_param2, regr_XGBoosting_gs
 
 def model_lm(X_train, y_train, X_test, y_test, cv, i, D): 
     if (cv == 0 and i == 1) or (cv == 1):
